@@ -418,8 +418,8 @@ function update_compte(Request $request){
         "status"    =>false,
         "message"   =>'aucune modification effectué'
       ],404);
-    }else{
-
+    }
+    else{
       return response()->json([
         "statusCode"=>200,
         "status" =>true,
@@ -448,6 +448,157 @@ function update_compte(Request $request){
 /*-----------------------
       /**FACTURES */
 //-----------------------
+
+
+function paye_facture(Request $request){
+  try {
+    //TDV (numer de la facture)
+    $validateNum=validator::make($request->all(),[
+      "numero_fact"=>'required'
+    ]);
+//VDD
+
+    if($validateNum->fails()){
+      return response()->json([
+        "statuscode"=>404,
+        "status"    =>false,
+        "Message"   =>"veillez entrer le numero de la facture",
+        "error"     =>$validateNum->errors()
+      ],404);
+    }
+
+
+        //TDV (description facture)
+        $validateDes=validator::make($request->all(),[
+          "description_fact"=>'required'
+        ]);
+    //VDD
+    
+        if($validateDes->fails()){
+          return response()->json([
+            "statuscode"=>404,
+            "status"    =>false,
+            "Message"   =>"veillez entrer la description de la facture",
+            "error"     =>$validateDes->errors()
+          ],404);
+        }
+    
+
+
+        //TDV (niveau d'etude)
+        $validateNiv=validator::make($request->all(),[
+          "niveau"=>'required'
+        ]);
+    //VDD
+    
+        if($validateNiv->fails()){
+          return response()->json([
+            "statuscode"=>404,
+            "status"    =>false,
+            "Message"   =>"veillez entrer votre niveau",
+            "error"     =>$validateNiv->errors()
+          ],404);
+        }
+
+        //TDV (serie d'etude)
+        $validateSerie=validator::make($request->all(),[
+          "serie"=>'required'
+        ]);
+    //VDD
+    
+        if($validateSerie->fails()){
+          return response()->json([
+            "statuscode"=>404,
+            "status"    =>false,
+            "Message"   =>"veillez entrer votre niveau",
+            "error"     =>$validateSerie->errors()
+          ],404);
+        }
+
+
+        //TDV (date de la facture)
+        $validateDfact=validator::make($request->all(),[
+          "date_fact"=>'required'
+        ]);
+    //VDD
+    
+        if($validateDfact->fails()){
+          return response()->json([
+            "statuscode"=>404,
+            "status"    =>false,
+            "Message"   =>"veillez entrer la date",
+            "error"     =>$validateDfact->errors()
+          ],404);
+        }
+
+        //TDV (payement)
+        $validatePfact=validator::make($request->all(),[
+          "payement"=>'required'
+        ]);
+    //VDD
+    
+        if($validatePfact->fails()){
+          return response()->json([
+            "statuscode"=>404,
+            "status"    =>false,
+            "Message"   =>"veillez entrer le status du payement",
+            "error"     =>$validatePfact->errors()
+          ],404);
+        }
+
+
+        //////////////////////////
+          //PAYER SA FACTURE//
+        //////////////////////////
+
+$fact=Facture::create([
+  'numero_fact'       =>$request->numero_fact,
+  'description_fact'  =>$request->description_fact,
+  'niveau'            =>$request->niveau,
+  'serie'             =>$request->serie,
+  'MontantFact'       =>$request->MontantFact,
+  'date_fact'         =>$request->date_fact,
+  'payement'          =>$request->payement
+
+
+]);
+
+// generation de token
+
+return response()->json([
+  "statusCode"=>200,
+  "status"    =>True,
+  "Message"   =>"Felicitation vous venez de payer votre cours",
+  "Facture"   =>$fact,
+  // 'token'     => $user->createToken("API TOKEN")->plainTextToken
+
+],200);
+
+
+
+  } catch (\Throwable $th) {
+    //EPs
+    return response()->json([
+     "statuscode"=>500,
+      "status"=>false,
+      "message"=>$th->getMessage()
+    ],500); 
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //affichage du status de la facture
 function afficher_status_facture(Request $request)

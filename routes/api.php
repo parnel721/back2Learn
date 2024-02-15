@@ -51,7 +51,7 @@ Route::match(['PUT','POST'],'update_compte',[ElevesController::class,'update_com
 
 
 //  Factures
-
+Route::match(['GET','POST'],'paye_facture',[ElevesController::class,'paye_facture']);
 Route::match(['GET','POST'],'afficher_status_facture',[ElevesController::class,'afficher_status_facture']);
 Route::match(['GET','POST'],'status_by_id',[ElevesController::class,'status_by_id']);
 
