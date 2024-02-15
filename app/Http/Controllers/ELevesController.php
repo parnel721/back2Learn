@@ -586,20 +586,6 @@ return response()->json([
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //affichage du status de la facture
 function afficher_status_facture(Request $request)
 {
@@ -612,7 +598,7 @@ function afficher_status_facture(Request $request)
             return response()->json([
                 "statusCode"=>200,
                 "status"=>true,
-                "message"=>"ordonnance status effectué",
+                "message"=>"f status effectué",
                 "ordonnance"=>$StatusFact
             ],200);
         } catch (\Throwable $th) {
@@ -637,8 +623,8 @@ function status_by_id(Request $request){
     return response()->json([
         "statusCode"=>200,
         "status"=>true,
-        "message"=>"ordonnance id effectué",
-        "ordonnance"=> $StatByID
+        "message"=>"facture id effectué avec succès",
+        "facture"=> $StatByID
     ],200);
 
 
