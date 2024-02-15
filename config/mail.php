@@ -29,7 +29,7 @@ return [
     | mailers below. You are free to add additional mailers as required.
     |
     | Supported: "smtp", "sendmail", "mailgun", "ses", "ses-v2",
-    |            "postmark", "log", "array", "failover", "roundrobin"
+    |            "postmark", "log", "array", "failsover", "roundrobin"
     |
     */
 
@@ -79,8 +79,8 @@ return [
             'transport' => 'array',
         ],
 
-        'failover' => [
-            'transport' => 'failover',
+        'failsover' => [
+            'transport' => 'failsover',
             'mailers' => [
                 'smtp',
                 'log',

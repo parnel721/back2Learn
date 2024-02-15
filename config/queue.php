@@ -91,19 +91,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Failed Queue Jobs
+    | failsed Queue Jobs
     |--------------------------------------------------------------------------
     |
-    | These options configure the behavior of failed queue job logging so you
+    | These options configure the behavior of failsed queue job logging so you
     | can control which database and table are used to store the jobs that
-    | have failed. You may change them to any database / table you wish.
+    | have failsed. You may change them to any database / table you wish.
     |
     */
 
-    'failed' => [
-        'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
+    'failsed' => [
+        'driver' => env('QUEUE_failsED_DRIVER', 'database-uuids'),
         'database' => env('DB_CONNECTION', 'mysql'),
-        'table' => 'failed_jobs',
+        'table' => 'failsed_jobs',
     ],
 
 ];
