@@ -599,7 +599,7 @@ function afficher_status_facture(Request $request)
                 "statusCode"=>200,
                 "status"=>true,
                 "message"=>"f status effectué",
-                "ordonnance"=>$StatusFact
+                "Facture"=>$StatusFact
             ],200);
         } catch (\Throwable $th) {
             //EPs
@@ -688,7 +688,7 @@ return response()->json([
   "statusCode"=>200,
   "status"=>true,
   "message"=>"affichage effectué avec succès",
-  "ordonnance"=>$courById
+  "cours"=>$courById
 ],200);
 
   } catch (\Throwable $th) {
@@ -708,7 +708,7 @@ return response()->json([
 //-----------------------
 
 //affichage du lieu d'enseignement
-
+ 
 function afficher_classe(Request $request){
   try {
 
@@ -727,7 +727,7 @@ function afficher_classe(Request $request){
         "statuscode"=>200,
         "status"    =>false,
         'Message'   =>"classe affichés avec succès",
-        "cour"      =>$Classe
+        "classe "      =>$Classe
       ],200);
     }
 
@@ -770,7 +770,7 @@ function afficher_Matiere(Request $request){
         "statuscode"=>200,
         "status"    =>false,
         'Message'   =>"Matiere affichés avec succès",
-        "cour"      =>$Mat
+        "Matiere"      =>$Mat
       ],200);
     }
 

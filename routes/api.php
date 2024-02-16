@@ -84,3 +84,9 @@ API Zone_supervision
 
 Route::match(['GET','POST'],'afficher_zone',[ZoneSupController::class,'afficher_zone']);
 Route::match(['GET','POST'],'zoneById',[ZoneSupController::class,'zoneById']);
+
+
+/////////////////////////
+    /**API ADMIS */
+////////////////////////
+
