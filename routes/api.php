@@ -280,7 +280,7 @@ Route::match(['GET','POST'],'verifier_otp',[EncadreurController::class,'verifier
 // AFFICHER COMPTE (ENCADREUR)
 Route::match(['GET','POST'],'afficher_compte',[EncadreurController::class,'afficher_compte']);
 // MODIFIER COMPTE (ENCADREUR)
-Route::match(['GET','POST'],'update_compte',[EncadreurController::class,'update_compte']);
+Route::match(['PUT','POST'],'update_compte',[EncadreurController::class,'update_compte']);
 
 /**PAYEMENT */
 

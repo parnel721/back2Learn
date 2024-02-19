@@ -307,6 +307,101 @@ function connexion_encadreur(Request $request){
 }
 
 
+//generer otp (Encadreur)
+function generer_otp(Request $request){
+
+}
+
+//verifier otp (Encadreur)
+function Verifier_otp(Request $request){
+    
+}
+
+
+//////////////////////
+///COMPTE ENCADREUR//
+////////////////////
+
+//afficher les informations de l'encadreur
+
+function afficher_compte(Request $request){
+
+    try {
+        $Encadreur=Encadreur::all();
+    
+        if (count($Encadreur)!==0){
+          return response()->json([
+            "statuscode"=>200,
+            "status"    =>true,
+            "Message"   =>'affichage du compte avec succès',
+            "compte"    =>$Encadreur
+          ]);
+        }else{
+          return response()->json([
+            "statuscode"=>404,
+            "status"    =>False,
+            'Message'   =>'Aucun compte trouvé',
+          ],404); 
+        }
+    
+      } catch (\Throwable $th) {
+        //EPs
+    
+        return response()->json([
+          "statuscode"=>500,
+          "status"    =>false,
+          "Message"   =>$th->getMessage()
+        ],500);
+    
+      }
+
+
+}
+
+
+// modifier les infos  de l'encadreur
+
+function update_compte(Request $request){
+
+    try {
+  
+      // poser une requete
+      $idencadreurs =  $request->idencadreurs;
+      $nom          =  $request->nom;
+      
+      // code 
+     
+      $updatEn=Encadreur::where('idencadreurs',$idencadreurs)->update(["idencadreurs"=>$idencadreurs,"nom"=>$nom]);
+      
+      //VDD
+  
+      if($updatEn==0){
+        return response()->json([
+          "statuscode"=>404,
+          "status"    =>false,
+          "message"   =>'aucune modification effectué'
+        ],404);
+      }
+      else{
+        return response()->json([
+          "statusCode"=>200,
+          "status" =>true,
+          "message"=>"modification  effectué avec succes",
+          "compte"=>$updatEn
+      ],200); 
+  
+      }
+  
+    } catch (\Throwable $th) {
+      //EPs
+      return response()->json([
+        "statuscode"=>500,
+        "status"    =>false,
+        "Message"   =>$th->getMessage()
+      ],500);
+  
+    }
+  }
 
 
 
