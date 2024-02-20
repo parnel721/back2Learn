@@ -54,7 +54,7 @@ class Administareur extends Model
 		'prenom',
 		'date_Naissance',
 		'email',
-		'contact',
+		'telephone',
 		'password',
 		'cni',
 		'ville',
@@ -69,7 +69,7 @@ class Administareur extends Model
 
 	public function classes()
 	{
-		return $this->hasMany(Class::class, 'administareur_idgestionnaires');
+		return $this->hasMany(Classe::class, 'administareur_idgestionnaires');
 	}
 
 	public function cours()
@@ -79,7 +79,7 @@ class Administareur extends Model
 
 	public function eleves()
 	{
-		return $this->hasMany(Elefe::class, 'administareur_idgestionnaires');
+		return $this->hasMany(Eleve::class, 'administareur_idgestionnaires');
 	}
 
 	public function encadreurs()

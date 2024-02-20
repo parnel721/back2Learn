@@ -108,17 +108,17 @@ Route::match(['GET','POST'],'verifier_otp',[AdminController::class,'verifier_otp
 /**compte Admin */
 
 // afficher compte admin
-Route::match(['GET','POST'],'afficher_compte',[AdminController::class,'afficher_compte']);
+Route::match(['GET','POST'],'afficher_compte_AD',[AdminController::class,'afficher_compte_AD']);
 // modifier compte admin
-Route::match(['GET','POST'],'update_compte',[AdminController::class,'update_compte']);
+Route::match(['PUT','POST'],'update_compteAD',[AdminController::class,'update_compteAD']);
 
 
 /* Encadreur (admin supervision)*/
 
 // supprimer un Encadreur
-Route::match(['GET','POST'],'supprimer_encadreur',[AdminController::class,'supprimer_encadreur']);
+Route::match(['DELETE','POST'],'supprimer_encadreur',[AdminController::class,'supprimer_encadreur']);
 // modifier les coordonné d'un encadreur
-Route::match(['GET','POST'],'modifier_encadreur',[AdminController::class,'modifier_encadreur']);
+Route::match(['PUT','POST'],'modifier_encadreur',[AdminController::class,'modifier_encadreur']);
 // afficher tous les coordonnés d'un encadreur
 Route::match(['GET','POST'],'afficher_encadreur',[AdminController::class,'afficher_encadreur']);
 // afficher les coordonnées par identifiants Id
@@ -127,10 +127,10 @@ Route::match(['GET','POST'],'GetEncadreur_byId',[AdminController::class,'GetEnca
 /* Eleves (admin supervision)*/
 
 //supprimer un eleve
-Route::match(['GET','POST'],'supprimer_eleves',[AdminController::class,'supprimer_eleves']);
+Route::match(['DELETE','POST'],'supprimer_eleves',[AdminController::class,'supprimer_eleves']);
 
 // modifier les coodonnées des eleves
-Route::match(['GET','POST'],'modifier_eleves',[AdminController::class,'modifier_eleves']);
+Route::match(['PUT','POST'],'modifier_eleves',[AdminController::class,'modifier_eleves']);
 
 // afficher les coodonnées des eleves
 Route::match(['GET','POST'],'afficher_eleves',[AdminController::class,'afficher_eleves']);
@@ -141,10 +141,10 @@ Route::match(['GET','POST'],'getEleves_byId',[AdminController::class,'getEleves_
 /*  (Cours supervision)*/
 
 // supprimer un cours un eleve
-Route::match(['GET','POST'],'supprimer_cours',[AdminController::class,'supprimer_cours']);
+Route::match(['DELETE','POST'],'supprimer_cours',[AdminController::class,'supprimer_cours']);
 
 // modifier un cours
-Route::match(['GET','POST'],'modifier_cours',[AdminController::class,'modifier_cours']);
+Route::match(['PUT','POST'],'modifier_cours',[AdminController::class,'modifier_cours']);
 
 // afficher les cours
 Route::match(['GET','POST'],'afficher_cours',[AdminController::class,'afficher_cours']);
@@ -157,13 +157,13 @@ Route::match(['GET','POST'],'GetCours_byId',[AdminController::class,'GetCours_by
 /*  (Facture supervision)*/
 
 //  afficher facture
-Route::match(['GET','POST'],'afficher_cours',[AdminController::class,'afficher_cours']);
+Route::match(['GET','POST'],'afficher_facture',[AdminController::class,'afficher_facture']);
 
 // modifier Facture
-Route::match(['GET','POST'],'modifier_facture',[AdminController::class,'modifier_facture']);
+Route::match(['PUT','POST'],'modifier_facture',[AdminController::class,'modifier_facture']);
 
 // supprimer Facture
-Route::match(['GET','POST'],'supprimer_facture',[AdminController::class,'supprimer_facture']);
+Route::match(['DELETE','POST'],'supprimer_factureAD',[AdminController::class,'supprimer_factureAD']);
 
 // afficher les Factures avec identifiant Id
 Route::match(['GET','POST'],'GetFacture_byId',[AdminController::class,'GetFacture_byId']);
