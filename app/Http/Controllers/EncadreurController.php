@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 // importation des models
-
+use App\Models\Cour;
 use App\Models\Encadreur;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -66,7 +66,7 @@ function inscription_encadreur(Request $request){
         }
 
         //TDV (dte_naissance encadreur)
-        $validateDte= validator::make($request->all(),[
+        $validateDte=validator::make($request->all(),[
             'date_naissance'=>'required'
         ]);
         if ($validateDte->fails()){
@@ -81,8 +81,8 @@ function inscription_encadreur(Request $request){
 
 
         //TDV (Telephone encadreur)
-        $validateTel= validator::make($request->all(),[
-            'Telephone'=>'required'
+        $validateTel=validator::make($request->all(),[
+            'Telephone'=>'required|min:10|unique:encadreurs'
         ]);
         if ($validateTel->fails()){
             return response()->json([
@@ -94,11 +94,8 @@ function inscription_encadreur(Request $request){
             ]);
         }
 
-
-        
-
        //TDV (email encadreur)
-       $validatemail= validator::make($request->all(),[
+       $validatemail=validator::make($request->all(),[
         'email'=>'required'
     ]);
     if ($validatemail->fails()){
@@ -112,7 +109,7 @@ function inscription_encadreur(Request $request){
     }
 
        //TDV (password encadreur)
-       $validatPwd= validator::make($request->all(),[
+       $validatPwd=validator::make($request->all(),[
         'password'=>'required'
     ]);
     if ($validatPwd->fails()){
@@ -126,7 +123,7 @@ function inscription_encadreur(Request $request){
     }
 
        //TDV (profession encadreur)
-       $validatPf= validator::make($request->all(),[
+       $validatPf=validator::make($request->all(),[
         'profession'=>'required'
     ]);
     if ($validatPf->fails()){
@@ -141,7 +138,7 @@ function inscription_encadreur(Request $request){
 
 
        //TDV (diplome encadreur)
-       $validatDp= validator::make($request->all(),[
+       $validatDp=validator::make($request->all(),[
         'diplome'=>'required'
     ]);
     if ($validatDp->fails()){
@@ -155,7 +152,7 @@ function inscription_encadreur(Request $request){
     }
 
        //TDV (cni encadreur)
-       $validatCni= validator::make($request->all(),[
+       $validatCni=validator::make($request->all(),[
         'cni'=>'required'
     ]);
     if ($validatCni->fails()){
@@ -170,7 +167,7 @@ function inscription_encadreur(Request $request){
 
 
        //TDV (Ville encadreur)
-       $validatVil= validator::make($request->all(),[
+       $validatVil=validator::make($request->all(),[
         'ville'=>'required'
     ]);
     if ($validatVil->fails()){
@@ -185,7 +182,7 @@ function inscription_encadreur(Request $request){
 
 
        //TDV (commune_quatier encadreur)
-       $validatC_Q= validator::make($request->all(),[
+       $validatC_Q=validator::make($request->all(),[
         'commune_quatier'=>'required'
     ]);
     if ($validatC_Q->fails()){
@@ -203,7 +200,7 @@ function inscription_encadreur(Request $request){
       /////////////////////////////
 
       $user= User::create([
-        'telephone' => $request->Telephone,
+        'telephone' =>$request->Telephone,
       ]);
 
       $encadreur=Encadreur::create([
@@ -229,9 +226,9 @@ function inscription_encadreur(Request $request){
       return response()->json([
         "statuscode"=>200,
         "status"    =>true,
-        "Message"   =>" Félicitation votre compte est ouvert avec success",
-        "Eleves"    =>$encadreur,
-        'token'     => $user->createToken("API TOKEN")->plainTextToken
+        "Message"   =>"Félicitation votre compte est ouvert avec success",
+        "Encadreur"    =>$encadreur,
+        'token'     =>$user->createToken("API TOKEN")->plainTextToken
       ],200);
 
 
@@ -251,59 +248,54 @@ function inscription_encadreur(Request $request){
 
 // connexion au compte de l'encadreur
 
-function connexion_encadreur(Request $request){
-    
+public function connexion_encadreur(Request $request)
+{
     try {
-        //TDV
-        $validateTel=validator::make($request->all(),[
-            "Telephone"=>'required'
+        // Traitement des données avec Validator
+        $validator = Validator::make($request->all(), [
+            "Telephone" =>'required|min:10'
         ]);
-        
-        if ($validateTel->fails()){
+
+        // Vérification des données
+        if ($validator->fails()) {
             return response()->json([
-            "statuscode"=>404,
-            "status"    =>false,
-            "Message"   =>'veillez entrer votre numero de telephone',
-            "errors"    =>$validateTel->errors()
-    
+                "statuscode" =>404,
+                "status"     =>false,
+                "message"    =>'Veuillez fournir votre numéro de téléphone',
+                "errors"     =>$validator->errors()
             ]);
         }
 
-        ////////////////////////
-        ///nouvelle connexion //
-        ///////////////////////
+        // Nouvelle connexion
+        $encadreur = Encadreur::firstWhere('Telephone', $request->Telephone);
 
-        $encad=Encadreur::firstWhere('Telephone',$request->Telephone);
-        if($encad)
-        {
-            $user = User::firstWhere('telephone', $request->Telephone)->first();
+        if ($encadreur) {
+            $user = User::firstWhere('telephone', $request->Telephone)->firstOrFail();
             return response()->json([
-                "statuscode"=>200,
-                "status"    =>true,
-                "message"   =>"connecté avec succès",
-                "patient"   =>$encad,
-                "Token"     =>$user->CreateToken("API TOKEN")->plainTextToken
-             ],200);
-        }else{
-            return response()->json
-            ([
-                "statuscode"=>401,
-                "status"=>false,
-                "message"=>" telephone incorrecte",
-                "compte"=>[],
-             ],401);
+                "statuscode" =>200,
+                "status"     =>true,
+                "message"    =>"Connecté avec succès",
+                "encadreur"  =>$encadreur,
+                "Token"      =>$user->createToken("API TOKEN")->plainTextToken
+            ],200);
+        } else {
+            return response()->json([
+                "statuscode" =>401,
+                "status"     =>false,
+                "message"    =>"Numéro de téléphone incorrect",
+                "compte"     =>[],
+            ],401);
         }
 
     } catch (\Throwable $th) {
-        //EPs
+        // Gestion des erreurs
         return response()->json([
-            "statuscode"=>500,
-            "status"    =>false,
-            "Message"   =>$th->getMessage()
-        ],500);
+            "statuscode" =>500,
+            "status"     =>false,
+            "message"    =>$th->getMessage()
+        ], 500);
 
     }
-
 }
 
 
@@ -404,13 +396,270 @@ function update_compte(Request $request){
   }
 
 
+//////////////////////
+    ///COURS //
+////////////////////
+
+// ajouter les cours (Encadreur)
+function add_cours (Request $request){
+
+    try {
+      // Traitement des données avec validator (cours typ)
+      $validateTyp= validator::make($request->all(),[
+          'type_cours'=>'required|min:3'
+      ]);
+  
+      // Verification des données 
+      if( $validateTyp->fails()){
+        return response()->json([
+          "StatusCode"=>404,
+          "status"=>false,
+          "message"=>'veillez saisir votre type de cours',
+          "errors"=>$validateTyp->errors()
+        ],404); 
+      }
+  
+  
+      // Traitement des données avec validator (prix de cours)
+      $validatePrix= validator::make($request->all(),[
+        'prix_cours'=>'required|min:3'
+    ]);
+  
+    // Verification des données 
+    if( $validatePrix->fails()){
+      return response()->json([
+        "StatusCode"=>404,
+        "status"=>false,
+        "message"=>'veillez saisir votre prix',
+        "errors"=>$validatePrix->errors()
+      ],404); 
+    }
+  
+    //traitement des données avec validator (emploi du temps)
+    
+    $validateEMP=validator::make($request->all(),[
+      "emploi_du_temps"=>'required'
+    ]);
+  
+    //verification des données 
+    if ($validateEMP->fails()){
+      return response()->json([
+        "statuscode"=>404,
+        "status"=>false,
+        "Message"=>'veillez entrer votre Emploi du temps',
+        "errors"=>$validateEMP->errors()
+      ],404);
+    }
+  
+        //traitement des données avec validator (horaire)
+    
+        $validateHoraire=validator::make($request->all(),[
+            "horaire"=>'required'
+          ]);
+        
+          //verification des données 
+          if ($validateHoraire->fails()){
+            return response()->json([
+              "statuscode"=>404,
+              "status"=>false,
+              "Message"=>'veillez entrer votre Emploi du temps',
+              "errors"=>$validateHoraire->errors()
+            ],404);
+          }
+   
+  
+        /////////////////////////////
+        // OUVERTURE D'UN COMPTE//
+        /////////////////////////////
+  
+
+  
+        $Cours=Cour::create([
+  
+          "type_cours"      =>$request->type_cours,
+          "prix_cours"      =>$request->prix_cours,
+          "emploi_du_temps" =>$request->emploi_du_temps,
+          "horaire"         =>$request->horaire
+         
+
+        ]);
+  
+        // ////////////////////////////////////
+        //   // aucune  GENERATION DE TOKEN//
+        // ///////////////////////////////////
+  
+        return response()->json([
+          "statuscode"=>200,
+          "status"    =>true,
+          "Message"   =>"votre compte est ouvert avec success",
+          "cours"    =>$Cours,
+        ],200);
+  
+    } catch (\Throwable $th)
+    //permet de cibler une erreur provenant du serveur
+    {
+      return response()->json([
+        "statusCode"=>500,
+        "status"=>false,
+        "Message"=>$th->getMessage()
+      ],500);
+    }
+  }
+  
 
 
 
 
+// visionner les cours (Encadreur)
+
+
+public function afficher_cours(Request $request){
+    try {
+        // Code...
+        $cours = Cour::all(); // Utilisez une convention de nommage en minuscules pour les variables
+
+        // Vérifiez si des cours sont disponibles
+        if ($cours->isEmpty()) {
+            return response()->json([
+                'statusCode' => 404,
+                'status'     => false,
+                'message'    => 'Aucun cours disponible!'
+            ], 404);
+        } else {
+            return response()->json([
+                'statusCode' => 200,
+                'status'     => true,
+                'message'    => 'Cours affichés avec succès',
+                'cours'      => $cours
+            ], 200);
+        }
+
+    } catch (\Throwable $th) {
+        // Gestion des erreurs
+        return response()->json([
+            'statusCode' => 500,
+            'status'     => false,
+            'message'    => $th->getMessage()
+        ], 500);
+    }
+}
+
+  
+
+// modifier les cours (Encadreur)
+
+function update_cours(Request $request)
+{
+    try {
+        //requete
+        $idcours= $request->idcours;
+        $type_cours= $request->type_cours;
+
+        //code...
+        $modif=Cour::where('idcours',$idcours)->update(['idcours'=>$idcours,'type_cours'=>$type_cours]);
+
+        //verification
+        if($modif==0){
+            return response()->json([
+                "statusCode"=>400,
+                "status"    =>false,
+                "Message"   =>'aucune modification effectuée'
+            ]);
+        }else{
+            return response()->json([
+                "statusCode"=>200,
+                "status"    =>true,
+                "Message"   =>' modification effectuée avec succes'
+            ],200);  
+        }
+
+    } catch (\Throwable $th) {
+        //EPs
+        return response()->json([
+            "statusCode"=>500,
+            "status"=>false,
+            "Message"=>$th->getMessage()
+        ],500);
+    }
+
+
+}
+
+//affichage des cours par l'id
 
 
 
+function cours_by_id(Request $request){
+    try {
+        // Code...
+
+        $courById = Cour::firstWhere('idcours', $request->idcours);
+
+        if (!$courById) {
+            return response()->json([
+                "statusCode" => 404,
+                "status" => false,
+                "message" => "Cours non trouvé."
+            ], 404);
+        }
+
+        return response()->json([
+            "statusCode" => 200,
+            "status" => true,
+            "message" => "Affichage effectué avec succès",
+            "cours" => $courById
+        ], 200);
+
+    } catch (\Throwable $th) {
+        return response()->json([
+            "statusCode" => 500,
+            "status" => false,
+            "message" => $th->getMessage()
+        ], 500);
+    }
+}
+
+
+
+// suppression de cours par identifiant (Encadreur)
+
+
+
+
+function suppression_cours(Request $request){
+    try {
+        // Code...
+
+        $courbyid =Cour::where('idcours',$request->idcours);
+
+        if (!$courbyid) {
+            return response()->json([
+                "statusCode" => 404,
+                "status" => false,
+                "message" => "Cours non trouvé."
+            ], 404);
+        }
+        else{
+
+        $courbyid->delete();
+
+        return response()->json([
+            "statusCode" => 200,
+            "status" => true,
+            "message" => "Suppression effectuée avec succès",
+            "cours" => $courbyid
+        ], 200);
+
+        }
+
+    } catch (\Throwable $th) {
+        return response()->json([
+            "statusCode" => 500,
+            "status" => false,
+            "message" => $th->getMessage()
+        ], 500);
+    }
+}
 
 
 

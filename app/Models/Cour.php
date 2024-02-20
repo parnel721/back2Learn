@@ -41,7 +41,9 @@ class Cour extends Model
 	protected $fillable = [
 		'type_cours',
 		'prix_cours',
-		'emploi_du_temps'
+		'emploi_du_temps',
+		'horaire',
+		
 	];
 
 	public function administareur()

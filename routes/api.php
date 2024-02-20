@@ -295,8 +295,8 @@ Route::match(['GET','POST'],'add_cours',[EncadreurController::class,'add_cours']
 // AFFICHER COURS (ENCADREUR)
 Route::match(['GET','POST'],'afficher_cours',[EncadreurController::class,'afficher_cours']);
 // SUPPRIMER COURS  (ENCADREUR)
-Route::match(['GET','POST'],'suppression_cours',[EncadreurController::class,'suppression_cours']);
+Route::match(['DELETE','POST'],'suppression_cours',[EncadreurController::class,'suppression_cours']);
 // MODIFIER COURS  (ENCADREUR)
-Route::match(['GET','POST'],'update_cours',[EncadreurController::class,'update_cours']);
+Route::match(['PUT','POST'],'update_cours',[EncadreurController::class,'update_cours']);
 // AFFICHER COURS AVEC ID  (ENCADREUR)
 Route::match(['GET','POST'],'cours_by_id',[EncadreurController::class,'cours_by_id']);

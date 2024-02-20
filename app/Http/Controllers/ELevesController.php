@@ -89,7 +89,7 @@ function inscription_eleves (Request $request){
   //traitement des données avec validator (Telephone)
   
   $validateTel=validator::make($request->all(),[
-    "Telephone"=>'required|min:10'
+    "Telephone"=>'required|min:10|unique:eleves'
   ]);
 
   //verification des données 
@@ -265,77 +265,57 @@ function inscription_eleves (Request $request){
 /**** 
 //connexion eleves//
 ***/
-function connexion_eleves (Request $request)
+
+
+public function connexion_eleves(Request $request)
 {
-try {
+    try {
+        // Traitement des données avec Validator
+        $validator = Validator::make($request->all(), [
+            "Telephone" => 'required|min:10',
+            "password"  => 'required'
+        ]);
 
-  // Traitement des donnée avec validator (Telephone)
-
-  $validateTel=validator::make($request->all(),[
-    "Telephone"=>'required|min:10'
-  ]);
-
-  //Verification des données
-  if($validateTel->fails()){
-    return response()->json([
-      'statuscode'=>401,
-      'status'    =>false,
-      "Message"   =>"veillez entrer votre numero de telephone",
-      "errors"    =>$validateTel->errors()
-    ],401);
-  }
-
-   // Traitement des donnée avec validator (Password)
-
-  $validatePass=validator::make($request->all(),[
-    "password"=>'required'
-  ]);
-
-  //Verification des données
-  if($validatePass->fails()){
-    return response()->json([
-      'statuscode'=>404,
-      'status'    =>false,
-      "Message"   =>"veillez entrer votre Mot de passe",
-      "errors"    =>$validatePass->errors()
-    ],404);
-  }
-
-//////////////////////////////
-  // NOUVELLE CONNEXION //
-/////////////////////////////
-
-        // verification de la connexion  
-        $login = Eleve::firstWhere('Telephone',$request->Telephone);
-        if ($login) {
-            $user = User::firstWhere('telephone', $request->Telephone)->first();
+        // Vérification des données
+        if ($validator->fails()) {
             return response()->json([
-                "statuscode"=>200,
-                "status"    =>true,
-                "message"   =>"connecté avec succès",
-                "patient"   =>$login,
-                "Token"     =>$user->CreateToken("API TOKEN")->plainTextToken
-             ],200);
-        }else{
-            return response()->json
-            ([
-                "statuscode"=>401,
-                "status"=>false,
-                "message"=>" telephone incorrecte",
-                "compte"=>[],
-             ],401);
+                'statusCode' => 400,
+                'status'     => false,
+                'message'    => 'Veuillez fournir les informations requises.',
+                'errors'     => $validator->errors()
+            ], 400);
         }
-} catch (\Throwable $th) {
-// permet de cibler une erreur provenant du serveur...
 
-  return response()->json([
-    "statuscode"=>500,
-    "status"    =>false,
-    "message"   =>$th->getMessage()
-  ],500);
+        // Nouvelle connexion
+        $eleve = Eleve::firstWhere('Telephone', $request->Telephone);
+
+        if ($eleve) {
+            $user = User::firstWhere('telephone', $request->Telephone)->firstOrFail();
+            return response()->json([
+                "statusCode" => 200,
+                "status"     => true,
+                "message"    => "Connecté avec succès",
+                "eleve"      => $eleve,
+                "Token"      => $user->createToken("API_TOKEN")->plainTextToken
+            ], 200);
+        } else {
+            return response()->json([
+                "statusCode" => 401,
+                "status"     => false,
+                "message"    => "Numéro de téléphone incorrect",
+                "compte"     => [],
+            ], 401);
+        }
+    } catch (\Throwable $th) {
+        return response()->json([
+            "statusCode" => 500,
+            "status"     => false,
+            "message"    => $th->getMessage()
+        ], 500);
+    }
 }
 
-}
+
 
 /**** 
 //Generer otp//

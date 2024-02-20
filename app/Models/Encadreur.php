@@ -53,6 +53,7 @@ class Encadreur extends Model
 		'nom',
 		'prenom',
 		'date_naissance',
+		'Telephone',
 		'email',
 		'password',
 		'profession',
