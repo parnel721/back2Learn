@@ -8,6 +8,7 @@ use App\Models\Facture;
 use App\Models\Cour;
 use App\Models\Encadreur;
 use App\Models\Eleve;
+use App\Models\Matiere;
 use App\Models\User;
 use App\Models\ZoneSupervision;
 
@@ -1502,12 +1503,196 @@ function delete_classes(Request $request)
 
 
 /////////////////////
-//    PAYEMENT   //
+//    MAtiere   //
 ////////////////////
 
 
+function ajouter_matiere(Request $request){
+    try {
+        //TDV (nom matiere)
+        $validateNom=validator::make($request->all(),[
+            "nom_mat"=>"required",
+        ]);
+        if($validateNom->fails()){
+            return response()->json([
+                "statusCode"=>404,
+                "status"    =>false,
+                "Message"   =>"veillez entrer le nom de la matiere"
+            ],404);
+        }
+
+        /**Ajout de matiere */
+
+        $mat=Matiere::create([
+            "nom_mat"  => $request->nom_mat
+        ]);
+
+  // generation de token
+  
+  return response()->json([
+    "statusCode"=>200,
+    "status"    =>True,
+    "Message"   =>"Felicitation vous avez ajouter un nouveau",
+    "Facture"   =>$mat
+  ],200);
 
 
+
+    } catch (\Throwable $th) {
+        //EPs
+        return response()->json([
+            "statusCode"=>500,
+            "status"    =>false,
+            "error"   =>$th->getMessage()
+        ],500);
+    }
+}
+
+// affichage des cour (Admin)
+
+function getMatiere(Request $request)
+{
+    try {
+        // Code...
+
+        $Mat = Matiere::all();
+
+        // Vérification
+        if ($Mat->isEmpty()) {
+            return response()->json([
+                'statusCode' => 404,
+                'status' => false,
+                'message' => 'Aucune Matiere disponible!'
+            ], 404);
+        } else {
+            return response()->json([
+                'statusCode' => 200,
+                'status' => true,
+                'message' => 'Matiere affichées avec succès',
+                'Matiere' => $Mat
+            ], 200);
+        }
+
+    } catch (\Throwable $th) {
+        // Gestion des erreurs
+        return response()->json([
+            'statusCode' => 500,
+            'status' => false,
+            'message' => $th->getMessage()
+        ], 500);
+    }
+}
+
+
+// modification des cour (Admin)
+
+
+
+
+
+function updateMatiere(Request $request)
+{
+    try {
+        // Récupération des données de la requête
+        $idmatiere = $request->idmatiere;
+        $nom_mat = $request->nom_mat;
+
+        // Mise à jour de la matière
+        $modifMat = Matiere::where('idmatiere', $idmatiere)->update(['idmatiere'=> $idmatiere,'nom_mat' => $nom_mat]);
+
+        // Vérification si la mise à jour a eu lieu
+        if ($modifMat == 0) {
+            return response()->json([
+                "statusCode" => 400,
+                "status" => false,
+                "message" => 'Aucune modification effectuée'
+            ]);
+        } else {
+            // Réponse JSON avec les détails de la mise à jour
+            return response()->json([
+                "statusCode" => 200,
+                "status" => true,
+                "message" => 'Modification effectuée avec succès',
+                "matiere" => $modifMat
+            ], 200);
+        }
+
+    } catch (\Throwable $th) {
+        // Gestion des erreurs
+        return response()->json([
+            "statusCode" => 500,
+            "status" => false,
+            "message" => $th->getMessage()
+        ], 500);
+    }
+}
+
+
+
+
+// suppression de classe par identifiant (Admin)
+
+
+
+
+function deleteMatiere(Request $request)
+{
+    try {
+        // Récupération de la matière par son ID
+        $matiere = Matiere::where('idmatiere', $request->idmatiere);
+
+        // Vérification si la matière a été trouvée
+        if (!$matiere) {
+            return response()->json([
+                "statusCode" => 404,
+                "status" => false,
+                "message" => "Matiere non trouvée."
+            ], 404);
+        } else {
+            // Suppression de la matière
+            $matiere->delete();
+
+            return response()->json([
+                "statusCode" => 200,
+                "status" => true,
+                "message" => "Suppression effectuée avec succès",
+                "Matiere" => $matiere
+            ], 200);
+        }
+
+    } catch (\Throwable $th) {
+        // Gestion des erreurs
+        return response()->json([
+            "statusCode" => 500,
+            "status" => false,
+            "message" => $th->getMessage()
+        ], 500);
+    }
+}
+
+//affichage des MATIERE par l'id
+
+function MatbyId(Request $request){
+    try {
+      //code...
+  $MAtById=Matiere::firstwhere('idmatiere',$request->idmatiere);
+  
+  return response()->json([
+    "statusCode"=>200,
+    "status"=>true,
+    "message"=>"affichage effectué avec succès",
+    "Matiere"=>$MAtById
+  ],200);
+  
+    } catch (\Throwable $th) {
+        //EPs
+        return response()->json([
+          "statusCode"=>500,
+          "status"=>False,
+          "message"=>$th->getMessage()
+      ],500);
+    }
+  }
 
 
 

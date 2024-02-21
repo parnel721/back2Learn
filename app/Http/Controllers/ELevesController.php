@@ -759,7 +759,7 @@ function afficher_Matiere(Request $request){
     $Mat=Matiere::all();
 
     //VDD
-    if($Mat==0){
+    if($Mat===0){
       return response()->json([
         'statuscode'=>404,
         'status'    =>false,
@@ -783,6 +783,34 @@ function afficher_Matiere(Request $request){
   ],500);
   }
 }
+
+
+//affichage des MATIERE par l'id
+
+function MatbyId(Request $request){
+  try {
+    //code...
+$MAtById=Matiere::firstwhere('idmatiere',$request->idmatiere);
+
+return response()->json([
+  "statusCode"=>200,
+  "status"=>true,
+  "message"=>"affichage effectué avec succès",
+  "Matiere"=>$MAtById
+],200);
+
+  } catch (\Throwable $th) {
+      //EPs
+      return response()->json([
+        "statusCode"=>500,
+        "status"=>False,
+        "message"=>$th->getMessage()
+    ],500);
+  }
+}
+
+
+
 
 
 

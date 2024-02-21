@@ -71,6 +71,7 @@ Route::match(['GET','POST'],'afficher_classe',[ElevesController::class,'afficher
 // Matieres
 
 Route::match(['GET','POST'],'afficher_Matiere',[ElevesController::class,'afficher_Matiere']);
+Route::match(['GET','POST'],'afficherCours_Matiere',[ElevesController::class,'afficherCours_Matiere']);
 
 
 /*----------
@@ -220,6 +221,23 @@ Route::match(['DELETE','POST'],'delete_classes',[AdminController::class,'delete_
 
 // afficher toute les classes
 Route::match(['GET','POST'],'getAll_classes',[AdminController::class,'getAll_classes']);
+
+/*  (Matiere  supervision)*/
+
+// AJOUTER Matiere (supervision)
+Route::match(['GET','POST'],'ajouter_matiere',[AdminController::class,'ajouter_matiere']);
+// AFFICHER Matiere (supervision)
+Route::match(['GET','POST'],'getMatiere',[AdminController::class,'getMatiere']);
+// SUPPRIMER Matiere  (supervision)
+Route::match(['PUT','POST'],'updateMatiere',[AdminController::class,'updateMatiere']);
+// MODIFIER Matiere  (supervision)
+Route::match(['DELETE','POST'],'deleteMatiere',[AdminController::class,'deleteMatiere']);
+// affichage des matiere par identifiant
+Route::match(['GET','POST'],'MatbyId',[AdminController::class,'MatbyId']);
+
+
+
+
 
 
 //////////////////////

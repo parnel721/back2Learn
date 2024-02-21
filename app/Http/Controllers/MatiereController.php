@@ -41,4 +41,5 @@ function afficher_matiere(Request $request)
         ], 500);
     }
 }
+
 }
