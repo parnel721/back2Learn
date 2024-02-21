@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * 
- * @property Collection|Elefe[] $eleves
+ * @property Collection|Eleve[] $eleves
  *
  * @package App\Models
  */

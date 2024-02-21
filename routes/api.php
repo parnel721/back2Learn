@@ -194,13 +194,13 @@ Route::match(['GET','POST'],'ajouter_payement',[AdminController::class,'ajouter_
 /*  (Zone de  supervision)*/
 
 //  afficher zone
-Route::match(['GET','POST'],'afficher_zoneSup',[AdminController::class,'afficher_zoneSup']);
+Route::match(['GET','POST'],'afficher_zoneSupAD',[AdminController::class,'afficher_zoneSupAD']);
 
 // modifier zone
-Route::match(['GET','POST'],'modifier_ZoneSup',[AdminController::class,'modifier_ZoneSup']);
+Route::match(['PUT','POST'],'modifier_ZoneSup',[AdminController::class,'modifier_ZoneSup']);
 
 // supprimer supprimer
-Route::match(['GET','POST'],'supprimer_ZoneSup',[AdminController::class,'supprimer_ZoneSup']);
+Route::match(['DELETE','POST'],'supprimer_ZoneSupAD',[AdminController::class,'supprimer_ZoneSupAD']);
 
 // creer  les Zones
 Route::match(['GET','POST'],'ajouterZone_sup',[AdminController::class,'ajouterZone_sup']);
@@ -213,10 +213,10 @@ Route::match(['GET','POST'],'ajouterZone_sup',[AdminController::class,'ajouterZo
 Route::match(['GET','POST'],'ajouter_classe',[AdminController::class,'ajouter_classe']);
 
 // modifier classe
-Route::match(['GET','POST'],'update_classes',[AdminController::class,'update_classes']);
+Route::match(['PUT','POST'],'update_classes',[AdminController::class,'update_classes']);
 
 // supprimer classe
-Route::match(['GET','POST'],'delete_classes',[AdminController::class,'delete_classes']);
+Route::match(['DELETE','POST'],'delete_classes',[AdminController::class,'delete_classes']);
 
 // afficher toute les classes
 Route::match(['GET','POST'],'getAll_classes',[AdminController::class,'getAll_classes']);

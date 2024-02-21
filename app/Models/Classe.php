@@ -39,7 +39,7 @@ class Classe extends Model
 		'nom',
 		'Lieu',
 		'commune_quartier',
-		'administareur_idgestionnaires'
+		// 'administareur_idgestionnaires'
 	];
 
 	public function administareur()

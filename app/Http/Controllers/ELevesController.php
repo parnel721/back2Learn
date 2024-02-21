@@ -682,7 +682,7 @@ function afficher_cours(Request $request){
 function afficherCours_Matiere(Request $request){
   try {
     //code...
-$courById=Cour::firstwhere('id',$request->cours_idcours);
+$courById=Cour::firstwhere('idcours',$request->idcours);
 
 return response()->json([
   "statusCode"=>200,

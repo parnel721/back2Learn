@@ -624,9 +624,6 @@ function cours_by_id(Request $request){
 
 // suppression de cours par identifiant (Encadreur)
 
-
-
-
 function suppression_cours(Request $request){
     try {
         // Code...

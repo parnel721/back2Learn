@@ -1,12 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Administareur;
+use App\Models\Classe;
 use App\Models\Facture;
 use App\Models\Cour;
 use App\Models\Encadreur;
 use App\Models\Eleve;
 use App\Models\User;
+use App\Models\ZoneSupervision;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -1005,7 +1009,7 @@ function Ajouter_facture(Request $request){
     try {
   
       //code...
-      $StatByID=Facture::firstwhere("idfactures",$request->idfactures);
+      $StatByID=Facture::firstwhere("idfactures",$request->idfactures)->First();
   
       //VDD
       return response()->json([
@@ -1071,17 +1075,12 @@ function modifier_facture(Request $request)
 }
 
 
-
-
-
-
-
 function supprimer_factureAD(Request $request)
 {
     try {
         // Code...
 
-        $fac = Facture::where('idfactures', $request->idfactures);
+      $fac =Facture::where('idfactures',$request->idfactures);
 
         if (!$fac) {
             return response()->json([
@@ -1111,6 +1110,190 @@ function supprimer_factureAD(Request $request)
 
 
 
+/////////////////////
+//ZONE SUPERVISION//
+////////////////////
+
+//ajouter une zone de supervision (admin)
+
+function ajouterZone_sup(Request $request){
+  try {
+    //TDV (ville) admin
+    $validateNum=validator::make($request->all(),[
+      "ville"=>'required'
+    ]);
+//VDD
+
+    if($validateNum->fails()){
+      return response()->json([
+        "statuscode"=>404,
+        "status"    =>false,
+        "Message"   =>"veillez entrer la ville actuelle ou vous habitez",
+        "error"     =>$validateNum->errors()
+      ],404);
+    }
+
+
+        //TDV (commune quartier) Admin
+        $validateQC=validator::make($request->all(),[
+          "commune_quartier"=>'required'
+        ]);
+    //VDD
+    
+        if($validateQC->fails()){
+          return response()->json([
+            "statuscode"=>404,
+            "status"    =>false,
+            "Message"   =>"veillez entrer la description de la facture",
+            "error"     =>$validateQC->errors()
+          ],404);
+        }
+    
+        // creation d'une nouvelle zone
+
+        $Zone=ZoneSupervision::create([
+          'ville'       =>$request->ville,
+          'commune_quartier'  =>$request->commune_quartier,
+
+        ]);
+  
+        // generation de token
+        
+        return response()->json([
+          "statusCode"=>200,
+          "status"    =>True,
+          "Message"   =>"Felicitation vous venez d'ajouter votre lieu de residence",
+          "Zone"   =>$Zone
+        ],200);
+
+      } catch (\Throwable $th) {
+        //EPs
+        return response()->json([
+         "statuscode"=>500,
+          "status"=>false,
+          "message"=>$th->getMessage()
+        ],500); 
+      }
+    }
+
+
+//affichage de la zone de supervision
+ 
+
+function afficher_zoneSupAD(Request $request)
+{
+    try {
+        // Code...
+
+        $Zon = ZoneSupervision::all();
+
+        // Vérification
+        if ($Zon->isEmpty()) {
+            return response()->json([
+                'statusCode' => 404,
+                'status' => false,
+                'message' => 'Aucune zone de supervision disponible!'
+            ], 404);
+        } else {
+            return response()->json([
+                'statusCode' => 200,
+                'status' => true,
+                'message' => 'Zones de supervision affichées avec succès',
+                'Zone de supervision' => $Zon
+            ], 200);
+        }
+
+    } catch (\Throwable $th) {
+        // Gestion des erreurs
+        return response()->json([
+            'statusCode' => 500,
+            'status' => false,
+            'message' => $th->getMessage()
+        ], 500);
+    }
+}
+
+
+// modifier les Zone supervision (Admin)
+
+function modifier_ZoneSup(Request $request)
+{
+    try {
+        //requete
+        $idzone_supervision= $request->idzone_supervision;
+        $ville= $request->ville;
+
+        //code...
+        $modifZon=ZoneSupervision::where('idzone_supervision',$idzone_supervision)->update(['idzone_supervision'=>$idzone_supervision,'ville'=>$ville]);
+
+        //verification
+        if($modifZon==0){
+            return response()->json([
+                "statusCode"=>400,
+                "status"    =>false,
+                "Message"   =>'aucune modification effectuée'
+            ]);
+        }else{
+            return response()->json([
+                "statusCode"=>200,
+                "status"    =>true,
+                "Message"   =>' modification effectuée avec succes',
+                "Zone"      =>$modifZon
+            ],200);  
+        }
+
+    } catch (\Throwable $th) {
+        //EPs
+        return response()->json([
+            "statusCode"=>500,
+            "status"=>false,
+            "Message"=>$th->getMessage()
+        ],500);
+    }
+
+
+}
+
+
+
+// suppression de Zone supervision par identifiant (Admin)
+
+
+
+
+
+function supprimer_ZoneSupAD(Request $request)
+{
+    try {
+        // Code...
+
+        $zone = ZoneSupervision::where('idzone_supervision', $request->idzone_supervision);
+
+        if (!$zone) {
+            return response()->json([
+                "statusCode" => 404,
+                "status" => false,
+                "message" => "Zone de supervision non trouvée."
+            ], 404);
+        } else {
+            $zone->delete();
+
+            return response()->json([
+                "statusCode" => 200,
+                "status" => true,
+                "message" => "Suppression effectuée avec succès",
+                "zone" => $zone
+            ], 200);
+        }
+
+    } catch (\Throwable $th) {
+        return response()->json([
+            "statusCode" => 500,
+            "status" => false,
+            "message" => $th->getMessage()
+        ], 500);
+    }
+}
 
 
 
@@ -1120,11 +1303,207 @@ function supprimer_factureAD(Request $request)
 
 
 
+/////////////////////
+//     CLASSE     //
+////////////////////
 
 
 
 
 
+function ajouter_classe(Request $request)
+{
+    try {
+        // Validation du nom de la classe
+        $validationNom = validator::make($request->all(), [
+            "nom" => 'required'
+        ]);
+
+        // Vérification de la validation
+        if ($validationNom->fails()) {
+            return response()->json([
+                "statusCode" => 404,
+                "status" => false,
+                "message" => "Veuillez entrer le nom de la classe",
+                "error" => $validationNom->errors()
+            ], 404);
+        }
+
+        // Validation du lieu
+        $validationLieu = validator::make($request->all(), [
+            "Lieu" => 'required'
+        ]);
+
+        // Vérification de la validation
+        if ($validationLieu->fails()) {
+            return response()->json([
+                "statusCode" => 404,
+                "status" => false,
+                "message" => "Veuillez entrer le lieu de la rencontre du cours",
+                "error" => $validationLieu->errors()
+            ], 404);
+        }
+
+        // Validation de la commune ou du quartier
+        $validationCommuneQuartier = validator::make($request->all(), [
+            "commune_quartier" => 'required'
+        ]);
+
+        // Vérification de la validation
+        if ($validationCommuneQuartier->fails()) {
+            return response()->json([
+                "statusCode" => 404,
+                "status" => false,
+                "message" => "Veuillez entrer la commune ou le quartier où la classe se situe",
+                "error" => $validationCommuneQuartier->errors()
+            ], 404);
+        }
+
+        // Création d'une nouvelle classe
+        $classe = Classe::create([
+            'nom' => $request->nom,
+            'Lieu' => $request->Lieu,
+            'commune_quartier' => $request->commune_quartier,
+        ]);
+
+        // Génération de token (s'il y a lieu)
+
+        return response()->json([
+            "statusCode" => 200,
+            "status" => true,
+            "message" => "Félicitations, vous venez d'ajouter une classe",
+            "Classe" => $classe
+        ], 200);
+
+    } catch (\Throwable $th) {
+        // Gestion des erreurs
+        return response()->json([
+            "statusCode" => 500,
+            "status" => false,
+            "message" => $th->getMessage()
+        ], 500);
+    }
+}
+
+//affichage de la classe
+ 
+
+function getAll_classes(Request $request)
+{
+    try {
+        // Code...
+
+        $clas = Classe::all();
+
+        // Vérification
+        if ($clas->isEmpty()) {
+            return response()->json([
+                'statusCode' => 404,
+                'status' => false,
+                'message' => 'Aucune classe disponible!'
+            ], 404);
+        } else {
+            return response()->json([
+                'statusCode' => 200,
+                'status' => true,
+                'message' => 'Classe affichées avec succès',
+                'Classe' => $clas
+            ], 200);
+        }
+
+    } catch (\Throwable $th) {
+        // Gestion des erreurs
+        return response()->json([
+            'statusCode' => 500,
+            'status' => false,
+            'message' => $th->getMessage()
+        ], 500);
+    }
+}
+
+
+// modifier les classe (Admin)
+
+function update_classes(Request $request)
+{
+    try {
+        //requete
+        $idclasses= $request->idclasses;
+        $Lieu= $request->Lieu;
+
+        //code...
+        $modifclas=Classe::where('idclasses',$idclasses)->update(['idclasses'=>$idclasses,'Lieu'=>$Lieu]);
+
+        //verification
+        if($modifclas==0){
+            return response()->json([
+                "statusCode"=>400,
+                "status"    =>false,
+                "Message"   =>'aucune modification effectuée'
+            ]);
+        }else{
+            return response()->json([
+                "statusCode"=>200,
+                "status"    =>true,
+                "Message"   =>' modification effectuée avec succes',
+                "classe"      =>$modifclas
+            ],200);  
+        }
+
+    } catch (\Throwable $th) {
+        //EPs
+        return response()->json([
+            "statusCode"=>500,
+            "status"=>false,
+            "Message"=>$th->getMessage()
+        ],500);
+    }
+
+
+}
+
+
+
+// suppression de classe par identifiant (Admin)
+
+
+function delete_classes(Request $request)
+{
+    try {
+        // Code...
+
+        $class = Classe::Where('idclasses', $request->idclasses);
+
+        if (!$class) {
+            return response()->json([
+                "statusCode" => 404,
+                "status" => false,
+                "message" => "Classe non trouvée."
+            ], 404);
+        } else {
+            $class->delete();
+
+            return response()->json([
+                "statusCode" => 200,
+                "status" => true,
+                "message" => "Suppression effectuée avec succès",
+                "Classe" => $class
+            ], 200);
+        }
+
+    } catch (\Throwable $th) {
+        return response()->json([
+            "statusCode" => 500,
+            "status" => false,
+            "message" => $th->getMessage()
+        ], 500);
+    }
+}
+
+
+/////////////////////
+//    PAYEMENT   //
+////////////////////
 
 
 

@@ -49,7 +49,7 @@ class Cour extends Model
 		return $this->belongsTo(Administareur::class, 'administareur_idgestionnaires');
 	}
 
-	public function elefe()
+	public function eleve()
 	{
 		return $this->belongsTo(Eleve::class, 'eleves_ideleves');
 	}
